@@ -25,10 +25,29 @@ to_american_odds = function(decimal_odds){
   return (american_odds)
 }
 
+#Gives payout on bet given initial stake and odds
 payout = function(stake, odds){
   converted_odds = odds
-  if(abs(r) >= 50){
+  if(abs(odds) >= 50){
     converted_odds = to_decimal_odds(odds) 
   }
   return (converted_odds*stake)
 }
+
+#Gives breakeven win percentage, assumes line is decimal
+break_wp = function(line){
+  return (1/line)
+}
+
+#Calculates expected holds on a series of lines
+expected_hold = function(lines){
+  sum_bep = 0
+  for (value in lines){
+      sum_bep = sum_bep + break_wp(value)
+  }
+  return((1-(1/sum_bep))*100)
+}
+
+s = c(to_decimal_odds(205),to_decimal_odds(-250))
+p = expected_hold(s)
+p
