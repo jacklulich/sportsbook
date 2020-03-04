@@ -35,7 +35,7 @@ payout = function(stake, odds){
 }
 
 #Gives breakeven win percentage, assumes line is decimal
-break_wp = function(line){
+implied_probability = function(line){
   return (1/line)
 }
 
@@ -43,11 +43,16 @@ break_wp = function(line){
 expected_hold = function(lines){
   sum_bep = 0
   for (value in lines){
-      sum_bep = sum_bep + break_wp(value)
+      sum_bep = sum_bep + implied_probability(value)
   }
   return((1-(1/sum_bep))*100)
 }
 
-s = c(to_decimal_odds(205),to_decimal_odds(-250))
-p = expected_hold(s)
-p
+#Given a line, returns odds w/out vig. i/o decimal
+remove_vig = function(lines){
+  breakeven = implied_probability(lines)
+  total_vig = sum(breakeven)
+  true_percentages = breakeven/total_vig
+  vig_free = 1/true_percentages
+  return (vig_free)
+}
